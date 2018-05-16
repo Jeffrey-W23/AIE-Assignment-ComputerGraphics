@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GraphicsEngine", "GraphicsEngine\GraphicsEngine.vcxproj", "{FDBC577D-AA88-4372-91E6-E532F1EEE314}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9A979336-BC57-4582-9E86-AF5BAF84D37B} = {9A979336-BC57-4582-9E86-AF5BAF84D37B}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "glfw3", "glfw3\glfw3.vcxproj", "{9A979336-BC57-4582-9E86-AF5BAF84D37B}"
 EndProject
