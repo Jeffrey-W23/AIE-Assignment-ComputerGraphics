@@ -113,6 +113,9 @@ namespace age {
 			age::time m_tPreviousTime = m_cClock.now();
 			double deltaTime = 0;
 
+			// show debug information
+			Debug();
+
 			// run main game loop
 			while (!m_bGameOver)
 			{
@@ -126,30 +129,27 @@ namespace age {
 				glfwPollEvents();
 
 				// update the game
-				Run(float(deltaTime));
+				Update(float(deltaTime));
 
 				// draw game graphics
-				Render();
-
-				// show debug information
-				Debug();
-
-				// clearing buffer - Colour and depth checks
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+				Draw();
 
 				// swap the buffers for the window
 				glfwSwapBuffers(m_pWindow);
 
+				// clearing buffer - Colour and depth checks
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 				// close loop if the exit button or esc key is pressed
-				if (glfwWindowShouldClose(m_pWindow) == false && glfwGetKey(m_pWindow, GLFW_KEY_ESCAPE) != GLFW_PRESS)
+				if (glfwWindowShouldClose(m_pWindow) == GLFW_TRUE || glfwGetKey(m_pWindow, GLFW_KEY_ESCAPE))
 				{
-					m_bGameOver = false;
+					m_bGameOver = true;
 				}
 			}
 		}
 
 		// clean up
-		Terminate();
+		Shutdown();
 		DestroyWindow();
 
 		// Success
@@ -157,7 +157,7 @@ namespace age {
 	}
 
 	//--------------------------------------------------------------------------------------
-	// Debug:
+	// Debug: Shows debug information in the console window.
 	//--------------------------------------------------------------------------------------
 	void Application::Debug()
 	{
