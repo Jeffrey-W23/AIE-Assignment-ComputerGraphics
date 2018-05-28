@@ -163,6 +163,15 @@ void Application3D::Update(float deltaTime)
 	{
 		// Update the fly camera.
 		m_pCamera->Update(deltaTime, GetWindowPtr());
+
+		// Hide cursor
+		glfwSetInputMode(m_pWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
+
+	else if (!m_bCameraLock)
+	{
+		// Unhide cursor
+		glfwSetInputMode(m_pWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 }
 

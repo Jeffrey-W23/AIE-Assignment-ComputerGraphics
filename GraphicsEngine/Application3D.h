@@ -65,6 +65,8 @@ protected:
 
 
 
+	
+
 	// rottation matrix
 	glm::mat4 rot;
 
