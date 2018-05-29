@@ -25,82 +25,17 @@ namespace age
 	//--------------------------------------------------------------------------------------
 	Application::~Application()
 	{
-
 	}
 
 	//--------------------------------------------------------------------------------------
-	// NewWindow:
+	// Initialize: Set up the application, create a new window, call draw and update etc.
 	//
-	// Param:
-	//
+	// Param: 
+	//		kcTitle: The application window title. 
+	//		nWidth: The width of the window.
+	//		nHeight: The height of the window.
 	// Return:
-	//--------------------------------------------------------------------------------------
-	bool Application::NewWindow(const char* kcTitle, int nWidth, int nHeight)
-	{
-		// if we can hook into the GPU
-		if (glfwInit() == false)
-		{
-			// return false
-			return false;
-		}
-
-		// Make a window with OpenGL render. Width, Height, Window Name, Screen pointer.
-		m_pWindow = glfwCreateWindow(nWidth, nHeight, kcTitle, nullptr, nullptr);
-
-		// check if window worked
-		if (m_pWindow == nullptr)
-		{
-			// Clean up window and gpu linkage
-			glfwTerminate();
-
-			// -2 is a failure code
-			return false;
-		}
-
-		// bring window to front
-		glfwMakeContextCurrent(m_pWindow);
-
-		// Before loading interface functions
-		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
-		{
-			// Destory opengl window
-			glfwDestroyWindow(m_pWindow);
-
-			// Clean up window and gpu linkage
-			glfwTerminate();
-
-			// -3 is a failure code
-			return false;
-		}
-
-		// Settings grey clear
-		glClearColor(0.25f, 0.25f, 0.25f, 1);
-
-		// enable depth
-		glEnable(GL_DEPTH_TEST);
-
-		// return true
-		return true;
-	}
-
-	//--------------------------------------------------------------------------------------
-	// DestroyWindow:
-	//--------------------------------------------------------------------------------------
-	void Application::DestroyWindow()
-	{
-		// Destory opengl window
-		glfwDestroyWindow(m_pWindow);
-
-		// Clean up window and gpu linkage
-		glfwTerminate();
-	}
-
-	//--------------------------------------------------------------------------------------
-	// Initialize:
-	//
-	// Param:
-	//
-	// Return:
+	//		bool: returns true if init is successful.
 	//--------------------------------------------------------------------------------------
 	bool Application::Initialize(const char* kcTitle, int nWidth, int nHeight)
 	{
@@ -171,5 +106,102 @@ namespace age
 		auto major = ogl_GetMajorVersion();
 		auto minor = ogl_GetMinorVersion();
 		printf("GL Version: %i.%i\n", major, minor);
+	}
+
+
+
+
+
+
+
+
+	unsigned int Application::GetWindowWidth() const {
+		int w = 0, h = 0;
+		glfwGetWindowSize(m_pWindow, &w, &h);
+		return w;
+	}
+
+	unsigned int Application::GetWindowHeight() const {
+		int w = 0, h = 0;
+		glfwGetWindowSize(m_pWindow, &w, &h);
+		return h;
+	}
+
+
+
+
+
+
+
+
+
+	//--------------------------------------------------------------------------------------
+	// NewWindow: Creates a new application window.
+	//
+	// Param: 
+	//		kcTitle: The application window title. 
+	//		nWidth: The width of the window.
+	//		nHeight: The height of the window.
+	// Return:
+	//		bool: returns the success of the function.
+	//--------------------------------------------------------------------------------------
+	bool Application::NewWindow(const char* kcTitle, int nWidth, int nHeight)
+	{
+		// if we can hook into the GPU
+		if (glfwInit() == false)
+		{
+			// return false
+			return false;
+		}
+
+		// Make a window with OpenGL render. Width, Height, Window Name, Screen pointer.
+		m_pWindow = glfwCreateWindow(nWidth, nHeight, kcTitle, nullptr, nullptr);
+
+		// check if window worked
+		if (m_pWindow == nullptr)
+		{
+			// Clean up window and gpu linkage
+			glfwTerminate();
+
+			// -2 is a failure code
+			return false;
+		}
+
+		// bring window to front
+		glfwMakeContextCurrent(m_pWindow);
+
+		// Before loading interface functions
+		if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
+		{
+			// Destory opengl window
+			glfwDestroyWindow(m_pWindow);
+
+			// Clean up window and gpu linkage
+			glfwTerminate();
+
+			// -3 is a failure code
+			return false;
+		}
+
+		// Settings grey clear
+		glClearColor(0.25f, 0.25f, 0.25f, 1);
+
+		// enable depth
+		glEnable(GL_DEPTH_TEST);
+
+		// return true
+		return true;
+	}
+
+	//--------------------------------------------------------------------------------------
+	// DestroyWindow: Destory the window on application shutdown.
+	//--------------------------------------------------------------------------------------
+	void Application::DestroyWindow()
+	{
+		// Destory opengl window
+		glfwDestroyWindow(m_pWindow);
+
+		// Clean up window and gpu linkage
+		glfwTerminate();
 	}
 }

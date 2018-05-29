@@ -25,36 +25,40 @@ namespace age {
 		virtual ~Application();
 
 		//--------------------------------------------------------------------------------------
-		// Initialize:
+		// Initialize: Set up the application, create a new window, call draw and update etc.
 		//
-		// Param:
-		//
+		// Param: 
+		//		kcTitle: The application window title. 
+		//		nWidth: The width of the window.
+		//		nHeight: The height of the window.
 		// Return:
+		//		bool: returns true if init is successful.
 		//--------------------------------------------------------------------------------------
 		bool Initialize(const char* kcTitle, int nWidth, int nHeight);
 
 		//--------------------------------------------------------------------------------------
-		// NewWindow:
+		// Start: Initialize the game.
 		//
-		// Return:
+		// Returns:
+		//		bool: Returns a true or false for if the startup is sucessful.
 		//--------------------------------------------------------------------------------------
 		virtual bool Start() = 0;
 
 		//--------------------------------------------------------------------------------------
-		// Shutdown:
+		// shutdown: Called on application shutdown and does all the cleaning up (eg. Deleteing pointers.)
 		//--------------------------------------------------------------------------------------
 		virtual void Shutdown() = 0;
 
 		//--------------------------------------------------------------------------------------
-		// Update:
+		// Update: Updates objects over time.
 		//
 		// Param:
-		//		deltaTime: 
+		//		deltaTime: Pass in deltaTime. A number that updates per second.
 		//--------------------------------------------------------------------------------------
 		virtual void Update(float deltaTime) = 0;
 
 		//--------------------------------------------------------------------------------------
-		// Draw:
+		// Draw: A virtual function to render (or "draw") objects to the screen.
 		//--------------------------------------------------------------------------------------
 		virtual void Draw() = 0;
 
@@ -73,19 +77,40 @@ namespace age {
 		//--------------------------------------------------------------------------------------
 		GLFWwindow* GetWindowPtr() const { return m_pWindow; }
 
+
+
+
+
+
+
+
+
+		// returns the width / height of the game window
+		unsigned int GetWindowWidth() const;
+		unsigned int GetWindowHeight() const;
+
+
+
+
+
+
+
 	protected:
 
 		//--------------------------------------------------------------------------------------
-		// NewWindow:
+		// NewWindow: Creates a new application window.
 		//
-		// Param:
-		//
+		// Param: 
+		//		kcTitle: The application window title. 
+		//		nWidth: The width of the window.
+		//		nHeight: The height of the window.
 		// Return:
+		//		bool: returns the success of the function.
 		//--------------------------------------------------------------------------------------
 		bool NewWindow(const char* kcTitle, int nWidth, int nHeight);
 
 		//--------------------------------------------------------------------------------------
-		// DestroyWindow:
+		// DestroyWindow: Destory the window on application shutdown.
 		//--------------------------------------------------------------------------------------
 		void DestroyWindow();
 

@@ -5,6 +5,7 @@
 #include "glfw3.h"
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include "Shader.h"
 
 //--------------------------------------------------------------------------------------
 // Default Constructor.
@@ -24,9 +25,10 @@ Application3D::~Application3D()
 }
 
 //--------------------------------------------------------------------------------------
-// Start:
+// Start: Initialize the game.
 //
-// Return:
+// Returns:
+//		bool: Returns a true or false for if the startup is sucessful.
 //--------------------------------------------------------------------------------------
 bool Application3D::Start()
 {
@@ -48,6 +50,44 @@ bool Application3D::Start()
 
 
 
+
+	m_shader.loadShader(aie::eShaderStage::VERTEX, "./shaders/simple.vert");
+	m_shader.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/simple.frag");
+	
+	if (m_shader.link() == false) 
+	{
+		printf("Shader Error: %s\n", m_shader.getLastError());
+		return false;
+	}
+	
+
+
+
+
+	// define 6 vertices for 2 triangles
+	Mesh::Vertex vertices[6];
+	vertices[0].position = { -0.5f, 0, 0.5f, 1 };
+	vertices[1].position = { 0.5f, 0, 0.5f, 1 };
+	vertices[2].position = { -0.5f, 0, -0.5f, 1 };
+	vertices[3].position = { -0.5f, 0, -0.5f, 1 };
+	vertices[4].position = { 0.5f, 0, 0.5f, 1 };
+	vertices[5].position = { 0.5f, 0, -0.5f, 1 };
+	m_quadMesh.initialise(6, vertices);
+
+	// make the quad 10 units wide
+	m_quadTransform = {
+		1,0,0,0,
+		0,1,0,0,
+		0,0,1,0,
+		0,0,0,1 };
+
+
+
+
+
+
+
+	// ------------ PLANETS ------------ // SORT
 	// set the parent matrix
 	parentMatrix = glm::mat4(1);
 	parentMatrix[3] = glm::vec4(0, 0, 10, 1);
@@ -65,21 +105,14 @@ bool Application3D::Start()
 
 	// apply local and parent to the global matrix
 	globalMatrix = localMatrix * parentMatrix;
-
-
-
-
-
-
-
-
+	// ------------ PLANETS ------------ // SORT
 
 	// return success
 	return true;
 }
 
 //--------------------------------------------------------------------------------------
-// Shutdown:
+// shutdown: Called on application shutdown and does all the cleaning up (eg. Deleteing pointers.)
 //--------------------------------------------------------------------------------------
 void Application3D::Shutdown()
 {
@@ -91,9 +124,10 @@ void Application3D::Shutdown()
 }
 
 //--------------------------------------------------------------------------------------
-// Update:
+// Update: Updates objects over time.
 //
 // Param:
+//		deltaTime: Pass in deltaTime. A number that updates per second.
 //--------------------------------------------------------------------------------------
 void Application3D::Update(float deltaTime)
 {
@@ -113,14 +147,7 @@ void Application3D::Update(float deltaTime)
 		aie::Gizmos::addLine(glm::vec3(10, 0, -10 + i), glm::vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
 
-
-
-
-
-
-
-
-
+	// ------------ PLANETS ------------ // SORT
 	// update Rotation Matrix
 	rot = glm::rotate(deltaTime, glm::vec3(0, 1, 0));
 
@@ -145,14 +172,7 @@ void Application3D::Update(float deltaTime)
 	// Draw Shapes
 	aie::Gizmos::addSphere(glm::vec3(0), 1, 4, 4, glm::vec4(1, 1, 0, 1), &parentMatrix);
 	aie::Gizmos::addSphere(glm::vec3(0), 0.5f, 4, 4, glm::vec4(0, 1, 0, 1), &globalMatrix);
-
-
-
-
-
-
-
-
+	// ------------ PLANETS ------------ // SORT
 
 	// Unlock and lock the camera so that the mouse can be used to click imgui buttons
 	if (glfwGetKey(GetWindowPtr(), GLFW_KEY_SPACE))
@@ -176,10 +196,48 @@ void Application3D::Update(float deltaTime)
 }
 
 //--------------------------------------------------------------------------------------
-// Draw:
+// Draw: A virtual function to render (or "draw") objects to the screen.
 //--------------------------------------------------------------------------------------
 void Application3D::Draw()
 {
+
+
+
+
+
+
+	// bind shader
+	m_shader.bind();
+
+	// bind transform
+	auto pvm = m_pCamera->GetProjectionView() *  m_quadTransform;
+
+	m_shader.bindUniform("ProjectionViewModel", pvm);
+
+	// draw quad
+	m_quadMesh.draw();
+
+
+
+
+
+
+
+
 	// Draw the gizmo applied to camera
 	aie::Gizmos::draw(m_pCamera->GetProjectionView());
+
+
+
+
+
+
+
+
+	// draw 2D gizmos using an orthogonal projection matrix
+	//aie::Gizmos::draw2D((float)glfwGetWindowSize(m_pWindow, 0, 0), (float)glfwGetWindowSize(m_pWindow, 0, 0));
+
+
+
+
 }
