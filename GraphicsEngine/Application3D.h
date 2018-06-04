@@ -4,6 +4,8 @@
 #include <glm/mat4x4.hpp>
 #include "Mesh.h"
 #include "Shader.h"
+#include "OBJMesh.h"
+#include "Texture.h"
 
 // forward declares
 class FlyCamera;
@@ -69,17 +71,20 @@ protected:
 
 
 
-	aie::ShaderProgram m_shader;
-	Mesh m_quadMesh;
-	glm::mat4 m_quadTransform;
 
 
+	// PUT INTO DIFFERENT SEPERATE CLASSES
+	// ------------ BUNNY ------------ // SORT
+	aie::ShaderProgram m_bunnyShader;
+	aie::OBJMesh m_bunnyMesh;
+	glm::mat4 m_bunnyTransform;
+	// ------------ BUNNY ------------ // SORT
 
-
-
-
-
-
+	// ------------ SPEAR ------------ // SORT
+	aie::ShaderProgram m_spearShader;
+	aie::OBJMesh m_spearMesh;
+	glm::mat4 m_spearTransform;
+	// ------------ SPEAR ------------ // SORT
 
 	// ------------ PLANETS ------------ // SORT
 	//--------------------------------------------------------------------------------------
@@ -100,4 +105,5 @@ protected:
 	glm::mat4 viewMatrix;
 	glm::mat4 projectionMatrix;
 	// ------------ PLANETS ------------ // SORT
+	// PUT INTO DIFFERENT SEPERATE CLASSES
 };

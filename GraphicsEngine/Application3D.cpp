@@ -51,41 +51,53 @@ bool Application3D::Start()
 
 
 
-	m_shader.loadShader(aie::eShaderStage::VERTEX, "./shaders/simple.vert");
-	m_shader.loadShader(aie::eShaderStage::FRAGMENT, "./shaders/simple.frag");
-	
-	if (m_shader.link() == false) 
+
+	// ------------ OBJECTS ------------ // SORT
+	// SPEAR
+	m_spearShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/textured.vert");
+	m_spearShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/textured.frag");
+
+	if (m_spearShader.link() == false)
 	{
-		printf("Shader Error: %s\n", m_shader.getLastError());
+		printf("Shader Error: %s\n", m_spearShader.getLastError());
 		return false;
 	}
-	
 
-
-
-
-	// define 6 vertices for 2 triangles
-	Mesh::Vertex vertices[6];
-	vertices[0].position = { -0.5f, 0, 0.5f, 1 };
-	vertices[1].position = { 0.5f, 0, 0.5f, 1 };
-	vertices[2].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[3].position = { -0.5f, 0, -0.5f, 1 };
-	vertices[4].position = { 0.5f, 0, 0.5f, 1 };
-	vertices[5].position = { 0.5f, 0, -0.5f, 1 };
-	m_quadMesh.initialise(6, vertices);
-
-	// make the quad 10 units wide
-	m_quadTransform = {
+	if (m_spearMesh.load("../models/soulspear/soulspear.obj",
+		true, true) == false) {
+		printf("Soulspear Mesh Error!\n");
+		return false;
+	}
+	m_spearTransform = {
 		1,0,0,0,
 		0,1,0,0,
 		0,0,1,0,
-		0,0,0,1 };
+		0,0,0,1
+	};
+	// SPEAR
 
+	// BUNNY
+	m_bunnyShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/textured.vert");
+	m_bunnyShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/textured.frag");
 
+	if (m_bunnyShader.link() == false)
+	{
+		printf("Shader Error: %s\n", m_bunnyShader.getLastError());
+		return false;
+	}
 
+	if (m_bunnyMesh.load("../models/stanford/bunny.obj") == false) {
+		printf("Bunny Mesh Error!\n");
+		return false;
+	}
 
-
-
+	m_bunnyTransform = {
+		0.5f,0,0,0,
+		0,0.5f,0,0,
+		0,0,0.5f,0,
+		0,0,0,1
+	};	// BUNNY
+	// ------------ OBJECTS ------------ // SORT
 
 	// ------------ PLANETS ------------ // SORT
 	// set the parent matrix
@@ -106,6 +118,16 @@ bool Application3D::Start()
 	// apply local and parent to the global matrix
 	globalMatrix = localMatrix * parentMatrix;
 	// ------------ PLANETS ------------ // SORT
+
+
+
+
+
+
+
+
+
+
 
 	// return success
 	return true;
@@ -134,6 +156,14 @@ void Application3D::Update(float deltaTime)
 	// clear gizmo buffer
 	aie::Gizmos::clear();
 	
+
+
+
+
+
+
+
+
 	// Build grid 
 	aie::Gizmos::addTransform(glm::mat4(1));
 	glm::vec4 white(1);
@@ -146,6 +176,12 @@ void Application3D::Update(float deltaTime)
 		aie::Gizmos::addLine(glm::vec3(-10 + i, 0, 10), glm::vec3(-10 + i, 0, -10), i == 10 ? white : black);
 		aie::Gizmos::addLine(glm::vec3(10, 0, -10 + i), glm::vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
+
+
+
+
+
+
 
 	// ------------ PLANETS ------------ // SORT
 	// update Rotation Matrix
@@ -173,6 +209,14 @@ void Application3D::Update(float deltaTime)
 	aie::Gizmos::addSphere(glm::vec3(0), 1, 4, 4, glm::vec4(1, 1, 0, 1), &parentMatrix);
 	aie::Gizmos::addSphere(glm::vec3(0), 0.5f, 4, 4, glm::vec4(0, 1, 0, 1), &globalMatrix);
 	// ------------ PLANETS ------------ // SORT
+
+
+
+
+
+
+
+
 
 	// Unlock and lock the camera so that the mouse can be used to click imgui buttons
 	if (glfwGetKey(GetWindowPtr(), GLFW_KEY_SPACE))
@@ -202,42 +246,44 @@ void Application3D::Draw()
 {
 
 
-
-
-
+	
 
 	// bind shader
-	m_shader.bind();
+	m_spearShader.bind();
 
+	
+	
+	
+	
 	// bind transform
-	auto pvm = m_pCamera->GetProjectionView() *  m_quadTransform;
-
-	m_shader.bindUniform("ProjectionViewModel", pvm);
-
-	// draw quad
-	m_quadMesh.draw();
+	auto pvm = m_pCamera->GetProjectionView() *  m_spearTransform;
 
 
 
 
 
+	m_spearShader.bindUniform("ProjectionViewModel", pvm);
+
+	// draw mesh
+	m_spearMesh.draw();
+
+
+
+
+
+	\
+	// bind shader
+	m_bunnyShader.bind();
+
+	m_bunnyShader.bindUniform("ProjectionViewModel", pvm);
+
+	// draw mesh
+	m_bunnyMesh.draw();
+
+	
 
 
 
 	// Draw the gizmo applied to camera
 	aie::Gizmos::draw(m_pCamera->GetProjectionView());
-
-
-
-
-
-
-
-
-	// draw 2D gizmos using an orthogonal projection matrix
-	//aie::Gizmos::draw2D((float)glfwGetWindowSize(m_pWindow, 0, 0), (float)glfwGetWindowSize(m_pWindow, 0, 0));
-
-
-
-
 }
