@@ -96,7 +96,8 @@ bool Application3D::Start()
 		0,0.5f,0,0,
 		0,0,0.5f,0,
 		0,0,0,1
-	};	// BUNNY
+	};
+	// BUNNY
 	// ------------ OBJECTS ------------ // SORT
 
 	// ------------ PLANETS ------------ // SORT
@@ -118,6 +119,8 @@ bool Application3D::Start()
 	// apply local and parent to the global matrix
 	globalMatrix = localMatrix * parentMatrix;
 	// ------------ PLANETS ------------ // SORT
+
+
 
 
 
@@ -164,6 +167,9 @@ void Application3D::Update(float deltaTime)
 
 
 
+
+
+
 	// Build grid 
 	aie::Gizmos::addTransform(glm::mat4(1));
 	glm::vec4 white(1);
@@ -176,12 +182,6 @@ void Application3D::Update(float deltaTime)
 		aie::Gizmos::addLine(glm::vec3(-10 + i, 0, 10), glm::vec3(-10 + i, 0, -10), i == 10 ? white : black);
 		aie::Gizmos::addLine(glm::vec3(10, 0, -10 + i), glm::vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
-
-
-
-
-
-
 
 	// ------------ PLANETS ------------ // SORT
 	// update Rotation Matrix
@@ -209,6 +209,9 @@ void Application3D::Update(float deltaTime)
 	aie::Gizmos::addSphere(glm::vec3(0), 1, 4, 4, glm::vec4(1, 1, 0, 1), &parentMatrix);
 	aie::Gizmos::addSphere(glm::vec3(0), 0.5f, 4, 4, glm::vec4(0, 1, 0, 1), &globalMatrix);
 	// ------------ PLANETS ------------ // SORT
+
+
+
 
 
 
@@ -246,17 +249,27 @@ void Application3D::Draw()
 {
 
 
+
 	
+
 
 	// bind shader
 	m_spearShader.bind();
 
 	
 	
+
+
+
+
 	
 	
 	// bind transform
 	auto pvm = m_pCamera->GetProjectionView() *  m_spearTransform;
+
+
+
+
 
 
 
@@ -267,11 +280,6 @@ void Application3D::Draw()
 	// draw mesh
 	m_spearMesh.draw();
 
-
-
-
-
-	\
 	// bind shader
 	m_bunnyShader.bind();
 
@@ -281,6 +289,10 @@ void Application3D::Draw()
 	m_bunnyMesh.draw();
 
 	
+
+
+
+
 
 
 

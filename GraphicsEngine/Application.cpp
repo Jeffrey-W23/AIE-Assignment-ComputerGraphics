@@ -108,32 +108,41 @@ namespace age
 		printf("GL Version: %i.%i\n", major, minor);
 	}
 
-
-
-
-
-
-
-
-	unsigned int Application::GetWindowWidth() const {
+	//--------------------------------------------------------------------------------------
+	// GetWindowWidth: Returns the width of the game window.
+	//
+	// Return:
+	//		unsigned int: returns an int of the current game window width.
+	//--------------------------------------------------------------------------------------
+	unsigned int Application::GetWindowWidth() const 
+	{
+		// create 2 int values for holding height and width
 		int w = 0, h = 0;
+		
+		// Get the height and width of the current window.
 		glfwGetWindowSize(m_pWindow, &w, &h);
+
+		// Return width
 		return w;
 	}
 
-	unsigned int Application::GetWindowHeight() const {
+	//--------------------------------------------------------------------------------------
+	// GetWindowHeight: Returns the height of the game window.
+	//
+	// Return:
+	//		unsigned int: returns an int of the current game window height.
+	//--------------------------------------------------------------------------------------
+	unsigned int Application::GetWindowHeight() const 
+	{
+		// create 2 int values for holding height and width
 		int w = 0, h = 0;
+
+		// Get the height and width of the current window.
 		glfwGetWindowSize(m_pWindow, &w, &h);
+
+		// Return height
 		return h;
 	}
-
-
-
-
-
-
-
-
 
 	//--------------------------------------------------------------------------------------
 	// NewWindow: Creates a new application window.

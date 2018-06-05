@@ -134,7 +134,6 @@
     <ClCompile Include="Application3D.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="FlyCamera.cpp" />
-    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Gizmos.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -149,7 +148,6 @@
     <ClInclude Include="Application3D.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="FlyCamera.h" />
-    <ClInclude Include="GameObject.h" />
     <ClInclude Include="Gizmos.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="OBJMesh.h" />

@@ -77,23 +77,21 @@ namespace age {
 		//--------------------------------------------------------------------------------------
 		GLFWwindow* GetWindowPtr() const { return m_pWindow; }
 
-
-
-
-
-
-
-
-
-		// returns the width / height of the game window
+		//--------------------------------------------------------------------------------------
+		// GetWindowWidth: Returns the width of the game window.
+		//
+		// Return:
+		//		unsigned int: returns an int of the current game window width.
+		//--------------------------------------------------------------------------------------
 		unsigned int GetWindowWidth() const;
+		
+		//--------------------------------------------------------------------------------------
+		// GetWindowHeight: Returns the height of the game window.
+		//
+		// Return:
+		//		unsigned int: returns an int of the current game window height.
+		//--------------------------------------------------------------------------------------
 		unsigned int GetWindowHeight() const;
-
-
-
-
-
-
 
 	protected:
 

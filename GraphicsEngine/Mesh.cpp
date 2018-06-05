@@ -1,41 +1,47 @@
+// #includes, using, etc
 #include "Mesh.h"
 #include "..//dependencies/glCore/gl_core_4_5.h"
 
-
+//--------------------------------------------------------------------------------------
+// Default Destructor.
+//--------------------------------------------------------------------------------------
 Mesh::~Mesh()
 {
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ibo);
+	// delete vertex array and buffers
+	glDeleteVertexArrays(1, &m_unVAO);
+	glDeleteBuffers(1, &m_unVBO);
+	glDeleteBuffers(1, &m_unIBO);
 }
 
-void Mesh::initialiseQuad() 
+//--------------------------------------------------------------------------------------
+// InitialiseQuad: Initialises the mesh visually as a quad.
+//--------------------------------------------------------------------------------------
+void Mesh::InitialiseQuad() 
 {	
-	// check that the mesh is not initialized already
-	assert(vao == 0);
+	// check that the mesh is not initialized already.
+	assert(m_unVAO == 0);
 
-	// generate buffers
-	glGenBuffers(1, &vbo);
+	// generate buffers.
+	glGenBuffers(1, &m_unVBO);
+	glGenVertexArrays(1, &m_unVAO);
+
+	// bind vertex array.
+	glBindVertexArray(m_unVAO);
 	
-	glGenVertexArrays(1, &vao);
+	// bind vertex buffer.
+	glBindBuffer(GL_ARRAY_BUFFER, m_unVBO);
 
-	// bind vertex array aka a mesh wrapper
-	glBindVertexArray(vao);
-	
-	// bind vertex buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	// define 6 vertices for 2 triangles
-	Vertex vertices[6];
-	vertices[0].texCoord = { 0, 1 }; // bottom left
-	vertices[1].texCoord = { 1, 1 }; // bottom right
-	vertices[2].texCoord = { 0, 0 }; // top left
-	vertices[3].texCoord = { 0, 0 }; // top left
-	vertices[4].texCoord = { 1, 1 }; // bottom right
-	vertices[5].texCoord = { 1, 0 }; // top right
+	// define 6 vertices for 2 triangles.
+	Vertex Vertices[6];
+	Vertices[0].m_v4TexCoord = { 0, 1 }; // bottom left
+	Vertices[1].m_v4TexCoord = { 1, 1 }; // bottom right
+	Vertices[2].m_v4TexCoord = { 0, 0 }; // top left
+	Vertices[3].m_v4TexCoord = { 0, 0 }; // top left
+	Vertices[4].m_v4TexCoord = { 1, 1 }; // bottom right
+	Vertices[5].m_v4TexCoord = { 1, 0 }; // top right
 	
 	// fill vertex buffer
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex), Vertices, GL_STATIC_DRAW);
 
 	// enable first element as position
 	glEnableVertexAttribArray(0);
@@ -50,26 +56,35 @@ void Mesh::initialiseQuad()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// quad has 2 triangles
-	triCount = 2;
+	m_unTriCount = 2;
 }
 
-void Mesh::initialise(unsigned int vertexCount, const Vertex* vertices, unsigned int indexCount /* = 0 */, unsigned int* indices /* = nullptr*/) 
+//--------------------------------------------------------------------------------------
+// Initialise: Initialises the mesh visually.
+//
+// Params:
+//		unVertexCount: unsigned int for vertex count.
+//		kpVertices: const Vertex pointer for vertices.
+//		unIndexCount: unsigned int indices index.
+//		unpIndices: unsigned int pointer for indices.
+//--------------------------------------------------------------------------------------
+void Mesh::Initialise(unsigned int unVertexCount, const Vertex* kpVertices, unsigned int unIndexCount, unsigned int* unpIndices)
 {
-	assert(vao == 0);
+	// assert if VAO is 0
+	assert(m_unVAO == 0);
 	
 	// generate buffers
-	glGenBuffers(1, &vbo);
-	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &m_unVBO);
+	glGenVertexArrays(1, &m_unVAO);
 	
 	// bind vertex array aka a mesh wrapper
-	glBindVertexArray(vao);
+	glBindVertexArray(m_unVAO);
 	
 	// bind vertex buffer
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, m_unVBO);
 	
 	// fill vertex buffer
-	glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(Vertex),
-		vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, unVertexCount * sizeof(Vertex), kpVertices, GL_STATIC_DRAW);
 	
 	// enable first element as position
 	glEnableVertexAttribArray(0);
@@ -80,33 +95,49 @@ void Mesh::initialise(unsigned int vertexCount, const Vertex* vertices, unsigned
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
 	
 	// bind indices if there are any
-	if (indexCount != 0) {
-		glGenBuffers(1, &ibo);
+	if (unIndexCount != 0) {
+		
+		// generate buffers
+		glGenBuffers(1, &m_unIBO);
+		
 		// bind vertex buffer
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_unIBO);
+		
 		// fill vertex buffer
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-			indexCount * sizeof(unsigned int), indices, GL_STATIC_DRAW);
-		triCount = indexCount / 3;
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, unIndexCount * sizeof(unsigned int), unpIndices, GL_STATIC_DRAW);
+		
+		// triangle count is now index / 3 
+		m_unTriCount = unIndexCount / 3;
 	}
-	else {
-		triCount = vertexCount / 3;
+	else 
+	{
+		// triangle count is now index / 3 
+		m_unTriCount = unVertexCount / 3;
 	}
+	
 	// unbind buffers
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
-
-void Mesh::draw() 
+//--------------------------------------------------------------------------------------
+// Draw: Render the mesh to the engine window.
+//--------------------------------------------------------------------------------------
+void Mesh::Draw() 
 {
-	glBindVertexArray(vao);
+	// rebind VAO
+	glBindVertexArray(m_unVAO);
 	
 	// using indices or just vertices?
-	if (ibo != 0)
-		glDrawElements(GL_TRIANGLES, 3 * triCount, GL_UNSIGNED_INT, 0);
+	if (m_unIBO != 0)
+	{
+		// draw using index buffer
+		glDrawElements(GL_TRIANGLES, 3 * m_unTriCount, GL_UNSIGNED_INT, 0);
+	}
 	else
-		glDrawArrays(GL_TRIANGLES, 0, 3 * triCount);
+	{
+		// draw mesh using vertices 
+		glDrawArrays(GL_TRIANGLES, 0, 3 * m_unTriCount);
+	}
 }

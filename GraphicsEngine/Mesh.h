@@ -3,28 +3,63 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-class Mesh {
-
+//--------------------------------------------------------------------------------------
+// Mesh object. 
+//--------------------------------------------------------------------------------------
+class Mesh 
+{
 public:
 	
-	Mesh() : triCount(0), vao(0), vbo(0), ibo(0) {}
+	//--------------------------------------------------------------------------------------
+	// Default Constructor.
+	//--------------------------------------------------------------------------------------
+	Mesh() : m_unTriCount(0), m_unVAO(0), m_unVBO(0), m_unIBO(0) {}
+	
+	//--------------------------------------------------------------------------------------
+	// Default Destructor.
+	//--------------------------------------------------------------------------------------
 	virtual ~Mesh();
 	
+	//--------------------------------------------------------------------------------------
+	// Struct Vertex: holds 3 vec4 values for the vertex position, normal and texture coord.
+	//--------------------------------------------------------------------------------------
 	struct Vertex 
 	{
-		glm::vec4 position;
-		glm::vec4 normal;
-		glm::vec2 texCoord;
+		glm::vec4 m_v4Position;
+		glm::vec4 m_v4Normal;
+		glm::vec2 m_v4TexCoord;
 	};
 
-	void initialiseQuad();
+	//--------------------------------------------------------------------------------------
+	// InitialiseQuad: Initialises the mesh visually as a quad.
+	//--------------------------------------------------------------------------------------
+	void InitialiseQuad();
 
-	void initialise(unsigned int vertexCount, const Vertex* vertices, unsigned int indexCount = 0, unsigned int* indices = nullptr);
+	//--------------------------------------------------------------------------------------
+	// Initialise: Initialises the mesh visually.
+	//
+	// Params:
+	//		unVertexCount: unsigned int for vertex count.
+	//		kpVertices: const Vertex pointer for vertices.
+	//		unIndexCount: unsigned int indices index.
+	//		unpIndices: unsigned int pointer for indices.
+	//--------------------------------------------------------------------------------------
+	void Initialise(unsigned int unVertexCount, const Vertex* kpVertices, unsigned int unIndexCount = 0, unsigned int* unpIndices = nullptr);
 
-	virtual void draw();
+	//--------------------------------------------------------------------------------------
+	// Draw: Render the mesh to the engine window.
+	//--------------------------------------------------------------------------------------
+	virtual void Draw();
 
 protected:
 
-	unsigned int triCount;
-	unsigned int vao, vbo, ibo;
+	//--------------------------------------------------------------------------------------
+	// unsigned int for the triangle count of the mesh.
+	//--------------------------------------------------------------------------------------
+	unsigned int m_unTriCount;
+
+	//--------------------------------------------------------------------------------------
+	// unsigned int for the VAO, VBO and IBO.
+	//--------------------------------------------------------------------------------------
+	unsigned int m_unVAO, m_unVBO, m_unIBO;
 };
