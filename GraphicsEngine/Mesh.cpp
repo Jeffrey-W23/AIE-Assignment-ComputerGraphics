@@ -33,19 +33,41 @@ void Mesh::InitialiseQuad()
 
 	// define 6 vertices for 2 triangles.
 	Vertex Vertices[6];
+
+	// set positions.
+	Vertices[0].m_v4Position = { -0.5f, 0, 0.5f, 1 };
+	Vertices[1].m_v4Position = { 0.5f, 0, 0.5f, 1 };
+	Vertices[2].m_v4Position = { -0.5f, 0, -0.5f, 1 };
+	Vertices[3].m_v4Position = { -0.5f, 0, -0.5f, 1 };
+	Vertices[4].m_v4Position = { 0.5f, 0, 0.5f, 1 };
+	Vertices[5].m_v4Position = { 0.5f, 0, -0.5f, 1 };
+
+	// set normals.
+	Vertices[0].m_v4Normal = { 0, 1, 0, 0 };
+	Vertices[1].m_v4Normal = { 0, 1, 0, 0 };
+	Vertices[2].m_v4Normal = { 0, 1, 0, 0 };
+	Vertices[3].m_v4Normal = { 0, 1, 0, 0 };
+	Vertices[4].m_v4Normal = { 0, 1, 0, 0 };
+	Vertices[5].m_v4Normal = { 0, 1, 0, 0 };
+
+	// Set texture coords.
 	Vertices[0].m_v4TexCoord = { 0, 1 }; // bottom left
 	Vertices[1].m_v4TexCoord = { 1, 1 }; // bottom right
 	Vertices[2].m_v4TexCoord = { 0, 0 }; // top left
 	Vertices[3].m_v4TexCoord = { 0, 0 }; // top left
 	Vertices[4].m_v4TexCoord = { 1, 1 }; // bottom right
 	Vertices[5].m_v4TexCoord = { 1, 0 }; // top right
-	
+
 	// fill vertex buffer
 	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex), Vertices, GL_STATIC_DRAW);
 
 	// enable first element as position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+	// enable second element as normal
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex), (void*)16);
 
 	// enable third element as texture
 	glEnableVertexAttribArray(2);
@@ -89,6 +111,10 @@ void Mesh::Initialise(unsigned int unVertexCount, const Vertex* kpVertices, unsi
 	// enable first element as position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+	// enable second element as normal
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex), (void*)16);
 
 	// enable third element as texture
 	glEnableVertexAttribArray(2);

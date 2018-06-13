@@ -289,6 +289,16 @@ void Application3D::Draw()
 	m_bunnyMesh.draw();
 
 	
+	
+	
+	
+	
+	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+
+	// bind transforms for lighting
+	m_phongShader.bindUniform("NormalMatrix",
+		
+	glm::inverseTranspose(glm::mat3(m_modelTransform)));
 
 
 

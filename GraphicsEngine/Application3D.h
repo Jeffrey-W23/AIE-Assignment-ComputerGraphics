@@ -91,6 +91,28 @@ protected:
 	glm::mat4 m_spearTransform;
 	// ------------ SPEAR ------------ // SORT
 
+	// ------------ PHONG ------------ // SORT
+	aie::ShaderProgram m_phongShader;
+	Mesh m_quadMesh;
+	glm::mat4 m_quadTransform;
+	// ------------ PHONG ------------ // SORT
+
+
+
+
+
+	struct Light 
+	{
+		glm::vec3 direction;
+	};
+
+	Light m_light;
+
+
+
+
+
+
 	// ------------ PLANETS ------------ // SORT
 	//--------------------------------------------------------------------------------------
 	// rotation matrix
