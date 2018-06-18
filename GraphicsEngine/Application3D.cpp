@@ -14,6 +14,17 @@ Application3D::Application3D()
 {
 	// Set defaults
 	m_bCameraLock = false;
+
+	
+
+
+
+
+
+
+	m_light.diffuse = { 1, 1, 0 };
+	m_light.specular = { 1, 1, 0 };
+	m_ambientLight = { 0.25f, 0.25f, 0.25f };
 }
 
 //--------------------------------------------------------------------------------------
@@ -52,53 +63,47 @@ bool Application3D::Start()
 
 
 
-	// ------------ OBJECTS ------------ // SORT
-	// SPEAR
-	m_spearShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/textured.vert");
-	m_spearShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/textured.frag");
 
-	if (m_spearShader.link() == false)
+
+
+	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/normalmap.vert");
+	m_normalMapShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/normalmap.frag");
+	
+
+	if (m_normalMapShader.link() == false)
 	{
-		printf("Shader Error: %s\n", m_spearShader.getLastError());
+		printf("Shader Error: %s\n", m_normalMapShader.getLastError());
 		return false;
 	}
 
-	if (m_spearMesh.load("../models/soulspear/soulspear.obj",
-		true, true) == false) {
-		printf("Soulspear Mesh Error!\n");
-		return false;
-	}
-	m_spearTransform = {
-		1,0,0,0,
-		0,1,0,0,
-		0,0,1,0,
-		0,0,0,1
-	};
-	// SPEAR
-
-	// BUNNY
-	m_bunnyShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/textured.vert");
-	m_bunnyShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/textured.frag");
-
-	if (m_bunnyShader.link() == false)
-	{
-		printf("Shader Error: %s\n", m_bunnyShader.getLastError());
-		return false;
-	}
-
-	if (m_bunnyMesh.load("../models/stanford/bunny.obj") == false) {
+	if (m_spearMesh.load("../models/soulspear/soulspear.obj", true, true) == false) {
 		printf("Bunny Mesh Error!\n");
 		return false;
 	}
 
-	m_bunnyTransform = {
+	m_spearTransform = {
 		0.5f,0,0,0,
 		0,0.5f,0,0,
 		0,0,0.5f,0,
 		0,0,0,1
 	};
-	// BUNNY
-	// ------------ OBJECTS ------------ // SORT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// ------------ PLANETS ------------ // SORT
 	// set the parent matrix
@@ -221,6 +226,20 @@ void Application3D::Update(float deltaTime)
 
 
 
+	// query time since application started
+	float time = GetTime();
+
+	// rotate the light
+	m_light.direction = glm::normalize(glm::vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
+
+
+
+
+
+
+
+
+
 	// Unlock and lock the camera so that the mouse can be used to click imgui buttons
 	if (glfwGetKey(GetWindowPtr(), GLFW_KEY_SPACE))
 		m_bCameraLock = !m_bCameraLock;
@@ -250,14 +269,22 @@ void Application3D::Draw()
 
 
 
-	
 
 
-	// bind shader
-	m_spearShader.bind();
 
-	
-	
+
+
+
+	// bind phong shader program
+	m_normalMapShader.bind();
+		// bind light
+	m_normalMapShader.bindUniform("Ia", m_ambientLight);
+	m_normalMapShader.bindUniform("Id", m_light.diffuse);
+	m_normalMapShader.bindUniform("Is", m_light.specular);
+	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
+
+
+
 
 
 
@@ -270,35 +297,26 @@ void Application3D::Draw()
 
 
 
-
-
-
-
-
-	m_spearShader.bindUniform("ProjectionViewModel", pvm);
-
-	// draw mesh
-	m_spearMesh.draw();
-
-	// bind shader
-	m_bunnyShader.bind();
-
-	m_bunnyShader.bindUniform("ProjectionViewModel", pvm);
-
-	// draw mesh
-	m_bunnyMesh.draw();
-
 	
 	
 	
+
+
+	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
 	
-	
-	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+
+
+
 
 	// bind transforms for lighting
-	m_phongShader.bindUniform("NormalMatrix",
-		
-	glm::inverseTranspose(glm::mat3(m_modelTransform)));
+	m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+
+	//  send the camera’s position to the shader as a uniform:
+	m_normalMapShader.bindUniform("cameraPosition", m_pCamera->GetPosition());
+
+	// draw bunny mesh
+	m_spearMesh.draw();
+
 
 
 

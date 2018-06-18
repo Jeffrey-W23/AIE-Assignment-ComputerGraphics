@@ -68,6 +68,18 @@ void Camera::SetPosition(glm::vec3 v3Position)
 }
 
 //--------------------------------------------------------------------------------------
+// GetPosition: Get the position of the camera in 3d space.
+//
+// Return:
+//		vec3: a vector3 for the current position of the camera.
+//--------------------------------------------------------------------------------------
+glm::vec3 Camera::GetPosition()
+{
+	// return the camera pos
+	return glm::vec3(m_m4WorldTransform[3]);
+}
+
+//--------------------------------------------------------------------------------------
 // UpdateProjectionViewTransform: Update the projection view transform.
 //--------------------------------------------------------------------------------------
 void Camera::UpdateProjectionViewTransform()

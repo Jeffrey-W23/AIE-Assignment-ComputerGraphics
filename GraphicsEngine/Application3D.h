@@ -78,24 +78,15 @@ protected:
 
 
 
-	// PUT INTO DIFFERENT SEPERATE CLASSES
-	// ------------ BUNNY ------------ // SORT
-	aie::ShaderProgram m_bunnyShader;
-	aie::OBJMesh m_bunnyMesh;
-	glm::mat4 m_bunnyTransform;
-	// ------------ BUNNY ------------ // SORT
 
-	// ------------ SPEAR ------------ // SORT
-	aie::ShaderProgram m_spearShader;
+
+
+
+
+
+	aie::ShaderProgram m_normalMapShader;
 	aie::OBJMesh m_spearMesh;
 	glm::mat4 m_spearTransform;
-	// ------------ SPEAR ------------ // SORT
-
-	// ------------ PHONG ------------ // SORT
-	aie::ShaderProgram m_phongShader;
-	Mesh m_quadMesh;
-	glm::mat4 m_quadTransform;
-	// ------------ PHONG ------------ // SORT
 
 
 
@@ -104,9 +95,15 @@ protected:
 	struct Light 
 	{
 		glm::vec3 direction;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
 	};
 
 	Light m_light;
+	glm::vec3 m_ambientLight;
+
+
+
 
 
 

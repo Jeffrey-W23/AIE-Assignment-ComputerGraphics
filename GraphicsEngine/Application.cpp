@@ -145,6 +145,18 @@ namespace age
 	}
 
 	//--------------------------------------------------------------------------------------
+	// GetTime: returns time since application started
+	//
+	// Return:
+	//		float: returns time in float value.
+	//--------------------------------------------------------------------------------------
+	float Application::GetTime() const 
+	{
+		// return glfw time
+		return (float)glfwGetTime();
+	}
+
+	//--------------------------------------------------------------------------------------
 	// NewWindow: Creates a new application window.
 	//
 	// Param: 
