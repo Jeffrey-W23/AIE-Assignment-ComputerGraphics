@@ -2,8 +2,22 @@
 # File Created: 28.12.2010 16:32:24
 
 #
-# object 2003eclipse
 #
+#
+
+mtllib 2003eclipse.mtl
+
+
+#
+# 
+#
+g 
+
+
+#
+# _2003eclipse_MAT
+#
+usemtl _2003eclipse_MAT
 
 v  -0.0000 6.5095 34.1622
 v  -10.8459 7.0017 -29.7768

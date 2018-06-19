@@ -114,7 +114,7 @@ bool Application3D::Start()
 		0.5f,0,0,0,
 		0,0.5f,0,0,
 		0,0,0.5f,0,
-		0,0,0,1
+		5,0,-5,1.0f
 	};
 
 	// load the rock model
@@ -130,7 +130,7 @@ bool Application3D::Start()
 		0.5f,0,0,0,
 		0,0.5f,0,0,
 		0,0,0.5f,0,
-		5,0,-2,1
+		5,0,2.5f,1
 	};
 
 	// load the Sandbag model
@@ -146,7 +146,7 @@ bool Application3D::Start()
 		0.01f,0,0,0,
 		0,0.01f,0,0,
 		0,0,0.01f,0,
-		5,0,0,1.0f
+		5,0,6,1.0f
 	};
 
 	// load the skullmountain model
@@ -162,7 +162,23 @@ bool Application3D::Start()
 		0.01f,0,0,0,
 		0,0.01f,0,0,
 		0,0,0.01f,0,
-		5,0,6,1.0f
+		0,0,0,1
+	};
+
+	// load the Eclipse model
+	if (m_mEclipseMesh.load("../models/eclipse/2003eclipse.obj", true, true) == false) {
+
+		// print error and return false
+		printf("Eclipse Mesh Error!\n");
+		return false;
+	}
+
+	// set the Eclipse model trasform.
+	m_m4EclipseTransform = {
+		0.02f,0,0,0,
+		0,0.02f,0,0,
+		0,0,0.02f,0,
+		-5,0,6,1.0f
 	};
 	//-------- LOAD MODELS --------//
 
@@ -417,12 +433,19 @@ void Application3D::Draw()
 	// bind unlit shader
 	m_sUnlitShader.bind();
 
-	// bind camera transform
-	auto UnlitPVM = m_pCamera->GetProjectionView() *  m_m4RockTransform;
-	m_sUnlitShader.bindUniform("ProjectionViewModel", UnlitPVM);
+	// bind camera transform for rock
+	auto RockPVM = m_pCamera->GetProjectionView() *  m_m4RockTransform;
+	m_sUnlitShader.bindUniform("ProjectionViewModel", RockPVM);
 
 	// draw rock mesh
 	m_mRockMesh.draw();
+
+	// bind camera transform for Eclipse
+	auto EclipsePVM = m_pCamera->GetProjectionView() *  m_m4EclipseTransform;
+	m_sUnlitShader.bindUniform("ProjectionViewModel", EclipsePVM);
+
+	// draw Eclipse mesh
+	m_mEclipseMesh.draw();
 	//---- UNLIT SHADER WITH ROCK ----//
 
 	// Draw the gizmo applied to camera

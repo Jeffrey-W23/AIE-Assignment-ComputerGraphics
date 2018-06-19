@@ -2,12 +2,12 @@
 #
 #
 
-newmtl _Rock_MAT
+newmtl _2003eclipse_MAT
 illum 2
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
 Ks 0.500000 0.500000 0.500000
 Ns 20.000000
-map_Kd Rock_d.png
-map_Ks Rock_s.png
-bump Rock_n.png
+map_Kd eclipse2003-diffuse.tga
+map_Ks eclipse2003-spec.tga
+bump eclipse2003-normalmap.tga
