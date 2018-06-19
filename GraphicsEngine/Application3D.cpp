@@ -15,16 +15,10 @@ Application3D::Application3D()
 	// Set defaults
 	m_bCameraLock = false;
 
-	
-
-
-
-
-
-
-	m_light.diffuse = { 1, 1, 0 };
-	m_light.specular = { 1, 1, 0 };
-	m_ambientLight = { 0.25f, 0.25f, 0.25f };
+	// initialize light
+	m_lMovingLight.m_v3Diffuse = { 1, 1, 0 };
+	m_lMovingLight.m_v3Specular = { 1, 1, 0 };
+	m_v3AmbientLight = { 0.25f, 0.25f, 0.25f };
 }
 
 //--------------------------------------------------------------------------------------
@@ -32,7 +26,6 @@ Application3D::Application3D()
 //--------------------------------------------------------------------------------------
 Application3D::~Application3D()
 {
-
 }
 
 //--------------------------------------------------------------------------------------
@@ -53,41 +46,125 @@ bool Application3D::Start()
 	m_pCamera->SetLookAt(glm::vec3(50), glm::vec3(0), glm::vec3(0, 1, 0)); //10
 	m_pCamera->SetPerspective(glm::pi<float>() * 0.25f, 16.0f / 9.0f, 0.1f, 1000.0f);
 
+	//-------- LOAD SHADERS --------//
+	// load normalmap shader
+	m_sNormalMapShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/normalmap.vert");
+	m_sNormalMapShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/normalmap.frag");
 
-
-
-
-
-
-
-
-
-
-
-
-
-	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/normalmap.vert");
-	m_normalMapShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/normalmap.frag");
-	
-
-	if (m_normalMapShader.link() == false)
+	// if the linking fails
+	if (m_sNormalMapShader.link() == false)
 	{
-		printf("Shader Error: %s\n", m_normalMapShader.getLastError());
+		// print error and return false
+		printf("Shader Error: %s\n", m_sNormalMapShader.getLastError());
 		return false;
 	}
 
-	if (m_spearMesh.load("../models/soulspear/soulspear.obj", true, true) == false) {
+	// load phong shader
+	m_sPhongShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/phong.vert");
+	m_sPhongShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/phong.frag");
+	
+	// if the linking fails
+	if (m_sPhongShader.link() == false)
+	{
+		// print error and return false
+		printf("Shader Error: %s\n", m_sPhongShader.getLastError());
+		return false;
+	}
+
+	// load unlit shader
+	m_sUnlitShader.loadShader(aie::eShaderStage::VERTEX, "../shaders/unlit.vert");
+	m_sUnlitShader.loadShader(aie::eShaderStage::FRAGMENT, "../shaders/unlit.frag");
+
+	// if the linking fails
+	if (m_sUnlitShader.link() == false)
+	{
+		// print error and return false
+		printf("Shader Error: %s\n", m_sUnlitShader.getLastError());
+		return false;
+	}
+	//-------- LOAD SHADERS --------//
+
+	//-------- LOAD MODELS --------//
+	// load the spear model
+	if (m_mSpearMesh.load("../models/soulspear/soulspear.obj", true, true) == false) {
+		
+		// print error and return false
+		printf("Spear Mesh Error!\n");
+		return false;
+	}
+
+	// set the spear model trasform.
+	m_m4SpearTransform = {
+		0.5f,0,0,0,
+		0,0.5f,0,0,
+		0,0,0.5f,0,
+		-5,0,-5,1
+	};
+
+	// load the Bunny model
+	if (m_mBunnyMesh.load("../models/stanford/Bunny.obj", true, true) == false) {
+		
+		// print error and return false
 		printf("Bunny Mesh Error!\n");
 		return false;
 	}
 
-	m_spearTransform = {
+	// set the bunny model trasform.
+	m_m4BunnyTransform = {
 		0.5f,0,0,0,
 		0,0.5f,0,0,
 		0,0,0.5f,0,
 		0,0,0,1
 	};
 
+	// load the rock model
+	if (m_mRockMesh.load("../models/Rock/Rock.obj", true, true) == false) {
+		
+		// print error and return false
+		printf("Rock Mesh Error!\n");
+		return false;
+	}
+	
+	// set the rock model trasform.
+	m_m4RockTransform = {
+		0.5f,0,0,0,
+		0,0.5f,0,0,
+		0,0,0.5f,0,
+		5,0,-2,1
+	};
+
+	// load the Sandbag model
+	if (m_mSandbagMesh.load("../models/Sandbag/Sandbag.obj", true, true) == false) {
+
+		// print error and return false
+		printf("Sandbag Mesh Error!\n");
+		return false;
+	}
+
+	// set the Sandbag model trasform.
+	m_m4SandbagTransform = {
+		0.01f,0,0,0,
+		0,0.01f,0,0,
+		0,0,0.01f,0,
+		5,0,0,1.0f
+	};
+
+	// load the skullmountain model
+	if (m_mSkullMountainMesh.load("../models/skullmountain/Skull_Mountain.obj", true, true) == false) {
+
+		// print error and return false
+		printf("Sandbag Mesh Error!\n");
+		return false;
+	}
+
+	// set the skullmountain model trasform.
+	m_m4SkullMountainTransform = {
+		0.01f,0,0,0,
+		0,0.01f,0,0,
+		0,0,0.01f,0,
+		5,0,6,1.0f
+	};
+	//-------- LOAD MODELS --------//
 
 
 
@@ -137,6 +214,9 @@ bool Application3D::Start()
 
 
 
+
+
+
 	// return success
 	return true;
 }
@@ -164,17 +244,6 @@ void Application3D::Update(float deltaTime)
 	// clear gizmo buffer
 	aie::Gizmos::clear();
 	
-
-
-
-
-
-
-
-
-
-
-
 	// Build grid 
 	aie::Gizmos::addTransform(glm::mat4(1));
 	glm::vec4 white(1);
@@ -187,6 +256,25 @@ void Application3D::Update(float deltaTime)
 		aie::Gizmos::addLine(glm::vec3(-10 + i, 0, 10), glm::vec3(-10 + i, 0, -10), i == 10 ? white : black);
 		aie::Gizmos::addLine(glm::vec3(10, 0, -10 + i), glm::vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
+
+	// query time since application started
+	float time = GetTime();
+
+	// rotate the light
+	m_lMovingLight.m_v3Direction = glm::normalize(glm::vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	// ------------ PLANETS ------------ // SORT
 	// update Rotation Matrix
@@ -226,15 +314,6 @@ void Application3D::Update(float deltaTime)
 
 
 
-	// query time since application started
-	float time = GetTime();
-
-	// rotate the light
-	m_light.direction = glm::normalize(glm::vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
-
-
-
-
 
 
 
@@ -266,63 +345,85 @@ void Application3D::Update(float deltaTime)
 //--------------------------------------------------------------------------------------
 void Application3D::Draw()
 {
-
-
-
-
-
-
-
-
-
-	// bind phong shader program
-	m_normalMapShader.bind();
-		// bind light
-	m_normalMapShader.bindUniform("Ia", m_ambientLight);
-	m_normalMapShader.bindUniform("Id", m_light.diffuse);
-	m_normalMapShader.bindUniform("Is", m_light.specular);
-	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-
-
-
-
-
-
-
+	//---- NORMALMAP SHADER WITH SPEAR ----//
+	// bind normalmap shader program
+	m_sNormalMapShader.bind();
 	
+	// bind lighting
+	m_sNormalMapShader.bindUniform("Ia", m_v3AmbientLight);
+	m_sNormalMapShader.bindUniform("Id", m_lMovingLight.m_v3Diffuse);
+	m_sNormalMapShader.bindUniform("Is", m_lMovingLight.m_v3Specular);
+	m_sNormalMapShader.bindUniform("LightDirection", m_lMovingLight.m_v3Direction);
+
+	// bind camera transform
+	auto SpearPVM = m_pCamera->GetProjectionView() *  m_m4SpearTransform;
+	m_sNormalMapShader.bindUniform("ProjectionViewModel", SpearPVM);
 	
-	// bind transform
-	auto pvm = m_pCamera->GetProjectionView() *  m_spearTransform;
+	// bind transforms for lighting the spear
+	m_sNormalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_m4SpearTransform)));
 
+	// Send the camera’s position to the shader as a uniform:
+	m_sNormalMapShader.bindUniform("cameraPosition", m_pCamera->GetPosition());
 
+	// draw spear mesh
+	m_mSpearMesh.draw();
 
+	// bind camera transform
+	auto SandbagPVM = m_pCamera->GetProjectionView() *  m_m4SandbagTransform;
+	m_sNormalMapShader.bindUniform("ProjectionViewModel", SandbagPVM);
 
-	
-	
-	
+	// bind transforms for lighting the sandbag
+	m_sNormalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_m4SandbagTransform)));
 
+	// draw sandbag mesh
+	m_mSandbagMesh.draw();
 
-	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-	
+	// bind camera transform
+	auto SkullMountainPVM = m_pCamera->GetProjectionView() *  m_m4SkullMountainTransform;
+	m_sNormalMapShader.bindUniform("ProjectionViewModel", SkullMountainPVM);
 
+	// bind transforms for lighting the skullmountain
+	m_sNormalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_m4SkullMountainTransform)));
 
+	// draw skullmountain mesh
+	m_mSkullMountainMesh.draw();
+	//---- NORMALMAP SHADER WITH SPEAR ----//
 
+	//---- PHONG SHADER WITH BUNNY ----//
+	// bind phong shader
+	m_sPhongShader.bind();
+
+	// bind lighting
+	m_sPhongShader.bindUniform("Ia", m_v3AmbientLight);
+	m_sPhongShader.bindUniform("Id", m_lMovingLight.m_v3Diffuse);
+	m_sPhongShader.bindUniform("Is", m_lMovingLight.m_v3Specular);
+	m_sPhongShader.bindUniform("LightDirection", m_lMovingLight.m_v3Direction);
+
+	// bind camera transform
+	auto PhongPVM = m_pCamera->GetProjectionView() *  m_m4BunnyTransform;
+	m_sPhongShader.bindUniform("ProjectionViewModel", PhongPVM);
 
 	// bind transforms for lighting
-	m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	m_sPhongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_m4BunnyTransform)));
 
-	//  send the camera’s position to the shader as a uniform:
-	m_normalMapShader.bindUniform("cameraPosition", m_pCamera->GetPosition());
+	// Send the camera’s position to the shader as a uniform:
+	m_sPhongShader.bindUniform("cameraPosition", m_pCamera->GetPosition());
 
-	// draw bunny mesh
-	m_spearMesh.draw();
+	// draw Bunny mesh
+	m_mBunnyMesh.draw();
+	//---- PHONG SHADER WITH BUNNY ----//
 
+	//---- UNLIT SHADER WITH ROCK ----//
+	// bind unlit shader
+	m_sUnlitShader.bind();
 
+	// bind camera transform
+	auto UnlitPVM = m_pCamera->GetProjectionView() *  m_m4RockTransform;
+	m_sUnlitShader.bindUniform("ProjectionViewModel", UnlitPVM);
 
-
-
-
-
+	// draw rock mesh
+	m_mRockMesh.draw();
+	//---- UNLIT SHADER WITH ROCK ----//
 
 	// Draw the gizmo applied to camera
 	aie::Gizmos::draw(m_pCamera->GetProjectionView());
