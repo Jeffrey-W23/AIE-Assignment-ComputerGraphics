@@ -16,7 +16,7 @@ Application3D::Application3D()
 	m_bCameraLock = false;
 
 	// initialize light
-	m_lMovingLight.m_v3Diffuse = { 1, 1, 0 };
+	m_lMovingLight.m_v3Diffuse = { 1, 1, 0.5 };
 	m_lMovingLight.m_v3Specular = { 1, 1, 0 };
 	m_v3AmbientLight = { 0.25f, 0.25f, 0.25f };
 }
@@ -165,6 +165,12 @@ bool Application3D::Start()
 		0,0,0,1
 	};
 
+
+
+
+
+
+
 	// load the Eclipse model
 	if (m_mEclipseMesh.load("../models/eclipse/2003eclipse.obj", true, true) == false) {
 
@@ -178,7 +184,23 @@ bool Application3D::Start()
 		0.02f,0,0,0,
 		0,0.02f,0,0,
 		0,0,0.02f,0,
-		-5,0,6,1.0f
+		-3,0,6,1.0f
+	};
+
+	// load the Apple model
+	if (m_mAppleMesh.load("../models/apple/apple.obj", true, true) == false) {
+
+		// print error and return false
+		printf("Apple Mesh Error!\n");
+		return false;
+	}
+
+	// set the Apple model trasform.
+	m_m4AppleTransform = {
+		0.02f,0,0,0,
+		0,0.02f,0,0,
+		0,0,0.02f,0,
+		-7,0,6,1.0f
 	};
 	//-------- LOAD MODELS --------//
 
@@ -403,6 +425,38 @@ void Application3D::Draw()
 
 	// draw skullmountain mesh
 	m_mSkullMountainMesh.draw();
+
+
+
+
+	// bind camera transform
+	auto ApplePVM = m_pCamera->GetProjectionView() *  m_m4AppleTransform;
+	m_sNormalMapShader.bindUniform("ProjectionViewModel", ApplePVM);
+
+	// bind transforms for lighting the apple
+	m_sNormalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_m4AppleTransform)));
+
+	// draw skullmountain mesh
+	m_mAppleMesh.draw();
+
+
+
+
+
+	// bind camera transform for Eclipse
+	auto EclipsePVM = m_pCamera->GetProjectionView() *  m_m4EclipseTransform;
+	m_sNormalMapShader.bindUniform("ProjectionViewModel", EclipsePVM);
+
+	// bind transforms for lighting the eclipse
+	m_sNormalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_m4EclipseTransform)));
+
+	// draw Eclipse mesh
+	m_mEclipseMesh.draw();
+
+
+
+
+
 	//---- NORMALMAP SHADER WITH SPEAR ----//
 
 	//---- PHONG SHADER WITH BUNNY ----//
@@ -439,13 +493,6 @@ void Application3D::Draw()
 
 	// draw rock mesh
 	m_mRockMesh.draw();
-
-	// bind camera transform for Eclipse
-	auto EclipsePVM = m_pCamera->GetProjectionView() *  m_m4EclipseTransform;
-	m_sUnlitShader.bindUniform("ProjectionViewModel", EclipsePVM);
-
-	// draw Eclipse mesh
-	m_mEclipseMesh.draw();
 	//---- UNLIT SHADER WITH ROCK ----//
 
 	// Draw the gizmo applied to camera
