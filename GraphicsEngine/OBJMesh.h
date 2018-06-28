@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: Load in obj meshes.
+//
+// Description: This is downloaded from aie canvas as a part of the computer graphics
+// tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #pragma once
 
 #include <glm/vec2.hpp>

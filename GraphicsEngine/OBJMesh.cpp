@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: Load in obj meshes.
+//
+// Description: This is downloaded from aie canvas as a part of the computer graphics
+// tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #include "OBJMesh.h"
 #include "..//dependencies/glCore/gl_core_4_5.h"
 #include <glm/geometric.hpp>

@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: OpenGL core 4.5.c
+//
+// Description: This is downloaded from OpenGL github as stated by aie canvas as a part 
+// of the computer graphics tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #ifndef POINTER_C_GENERATED_HEADER_OPENGL_H
 #define POINTER_C_GENERATED_HEADER_OPENGL_H
 

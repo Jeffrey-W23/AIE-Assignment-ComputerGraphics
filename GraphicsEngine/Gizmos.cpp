@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: Render geometry
+//
+// Description: This is downloaded from aie canvas as a part of the computer graphics
+// tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #include "Gizmos.h"
 #include "..//dependencies/glCore/gl_core_4_5.h"
 #include <glm/glm.hpp>

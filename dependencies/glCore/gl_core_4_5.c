@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: OpenGL core 4.5.c
+//
+// Description: This is downloaded from OpenGL github as stated by aie canvas as a part 
+// of the computer graphics tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #include <stdlib.h>
 #include <string.h>
 #include <stddef.h>

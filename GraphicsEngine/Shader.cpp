@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: Bind a Shader to a Model
+//
+// Description: This is downloaded from aie canvas as a part of the computer graphics
+// tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #include "Shader.h"
 #include <cstdio>
 #include <cassert>

@@ -165,12 +165,6 @@ bool Application3D::Start()
 		0,0,0,1
 	};
 
-
-
-
-
-
-
 	// load the Eclipse model
 	if (m_mEclipseMesh.load("../models/eclipse/2003eclipse.obj", true, true) == false) {
 
@@ -204,56 +198,25 @@ bool Application3D::Start()
 	};
 	//-------- LOAD MODELS --------//
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// ------------ PLANETS ------------ // SORT
-	// set the parent matrix
-	parentMatrix = glm::mat4(1);
-	parentMatrix[3] = glm::vec4(0, 0, 10, 1);
+	//// set the parent matrix
+	//parentMatrix = glm::mat4(1);
+	//parentMatrix[3] = glm::vec4(0, 0, 10, 1);
 
-	// set the rotation matrix
-	rot = glm::mat4(1);
-	rot = glm::rotate(0.78553975f, glm::vec3(0, 1, 0));
+	//// set the rotation matrix
+	//rot = glm::mat4(1);
+	//rot = glm::rotate(0.78553975f, glm::vec3(0, 1, 0));
 
-	// apply rotation to the parentmatrix
-	parentMatrix = rot * parentMatrix;
+	//// apply rotation to the parentmatrix
+	//parentMatrix = rot * parentMatrix;
 
-	// set the local matrix
-	localMatrix = glm::mat4(1);
-	localMatrix[3] = glm::vec4(0, 0, -2, 1);
+	//// set the local matrix
+	//localMatrix = glm::mat4(1);
+	//localMatrix[3] = glm::vec4(0, 0, -2, 1);
 
-	// apply local and parent to the global matrix
-	globalMatrix = localMatrix * parentMatrix;
+	//// apply local and parent to the global matrix
+	//globalMatrix = localMatrix * parentMatrix;
 	// ------------ PLANETS ------------ // SORT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	// return success
 	return true;
@@ -301,61 +264,32 @@ void Application3D::Update(float deltaTime)
 	// rotate the light
 	m_lMovingLight.m_v3Direction = glm::normalize(glm::vec3(glm::cos(time * 2), glm::sin(time * 2), 0));
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 	// ------------ PLANETS ------------ // SORT
 	// update Rotation Matrix
-	rot = glm::rotate(deltaTime, glm::vec3(0, 1, 0));
+	//rot = glm::rotate(deltaTime, glm::vec3(0, 1, 0));
 
-	// Parent Oribits Center
-	parentMatrix = rot * parentMatrix;
+	//// Parent Oribits Center
+	//parentMatrix = rot * parentMatrix;
 
-	// parent spin
-	rot = glm::rotate(deltaTime * 3, glm::vec3(0, 1, 0));
-	parentMatrix = parentMatrix * rot;
+	//// parent spin
+	//rot = glm::rotate(deltaTime * 3, glm::vec3(0, 1, 0));
+	//parentMatrix = parentMatrix * rot;
 
-	// Rotate child around parent
-	rot = glm::rotate(deltaTime * -5, glm::vec3(1, 0, 0));
-	localMatrix = rot * localMatrix;
+	//// Rotate child around parent
+	//rot = glm::rotate(deltaTime * -5, glm::vec3(1, 0, 0));
+	//localMatrix = rot * localMatrix;
 
-	// spin child
-	rot = glm::rotate(deltaTime * 5, glm::vec3(0, 1, 0));
-	localMatrix = localMatrix * rot;
+	//// spin child
+	//rot = glm::rotate(deltaTime * 5, glm::vec3(0, 1, 0));
+	//localMatrix = localMatrix * rot;
 
-	// ... once child syncs. with parent.
-	globalMatrix = parentMatrix * localMatrix;
+	//// ... once child syncs. with parent.
+	//globalMatrix = parentMatrix * localMatrix;
 
-	// Draw Shapes
-	aie::Gizmos::addSphere(glm::vec3(0), 1, 4, 4, glm::vec4(1, 1, 0, 1), &parentMatrix);
-	aie::Gizmos::addSphere(glm::vec3(0), 0.5f, 4, 4, glm::vec4(0, 1, 0, 1), &globalMatrix);
+	//// Draw Shapes
+	//aie::Gizmos::addSphere(glm::vec3(0), 1, 4, 4, glm::vec4(1, 1, 0, 1), &parentMatrix);
+	//aie::Gizmos::addSphere(glm::vec3(0), 0.5f, 4, 4, glm::vec4(0, 1, 0, 1), &globalMatrix);
 	// ------------ PLANETS ------------ // SORT
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	// Unlock and lock the camera so that the mouse can be used to click imgui buttons
 	if (glfwGetKey(GetWindowPtr(), GLFW_KEY_SPACE))
@@ -383,7 +317,6 @@ void Application3D::Update(float deltaTime)
 //--------------------------------------------------------------------------------------
 void Application3D::Draw()
 {
-	//---- NORMALMAP SHADER WITH SPEAR ----//
 	// bind normalmap shader program
 	m_sNormalMapShader.bind();
 	
@@ -426,9 +359,6 @@ void Application3D::Draw()
 	// draw skullmountain mesh
 	m_mSkullMountainMesh.draw();
 
-
-
-
 	// bind camera transform
 	auto ApplePVM = m_pCamera->GetProjectionView() *  m_m4AppleTransform;
 	m_sNormalMapShader.bindUniform("ProjectionViewModel", ApplePVM);
@@ -438,10 +368,6 @@ void Application3D::Draw()
 
 	// draw skullmountain mesh
 	m_mAppleMesh.draw();
-
-
-
-
 
 	// bind camera transform for Eclipse
 	auto EclipsePVM = m_pCamera->GetProjectionView() *  m_m4EclipseTransform;
@@ -453,13 +379,6 @@ void Application3D::Draw()
 	// draw Eclipse mesh
 	m_mEclipseMesh.draw();
 
-
-
-
-
-	//---- NORMALMAP SHADER WITH SPEAR ----//
-
-	//---- PHONG SHADER WITH BUNNY ----//
 	// bind phong shader
 	m_sPhongShader.bind();
 
@@ -481,9 +400,7 @@ void Application3D::Draw()
 
 	// draw Bunny mesh
 	m_mBunnyMesh.draw();
-	//---- PHONG SHADER WITH BUNNY ----//
 
-	//---- UNLIT SHADER WITH ROCK ----//
 	// bind unlit shader
 	m_sUnlitShader.bind();
 
@@ -493,7 +410,6 @@ void Application3D::Draw()
 
 	// draw rock mesh
 	m_mRockMesh.draw();
-	//---- UNLIT SHADER WITH ROCK ----//
 
 	// Draw the gizmo applied to camera
 	aie::Gizmos::draw(m_pCamera->GetProjectionView());

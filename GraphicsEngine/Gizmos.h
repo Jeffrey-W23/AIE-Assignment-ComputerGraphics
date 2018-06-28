@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: Render geometry
+//
+// Description: This is downloaded from aie canvas as a part of the computer graphics
+// tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #pragma once
 
 #include <glm/fwd.hpp>

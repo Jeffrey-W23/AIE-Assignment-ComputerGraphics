@@ -1,3 +1,12 @@
+//--------------------------------------------------------------------------------------
+// Purpose: Texture a model.
+//
+// Description: This is downloaded from aie canvas as a part of the computer graphics
+// tutorials. 
+//
+// Author: AIE Canvas
+//--------------------------------------------------------------------------------------
+
 #pragma once
 
 #include <string>
